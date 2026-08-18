@@ -76,19 +76,39 @@ class CalculatorCubit extends Cubit<CalculatorState> {
           .where((e) => e.isNotEmpty)
           .toList();
 
-      double result = double.parse(numbers[0]);
+      List<double> values = [];
+
+      for (int i = 0; i < numbers.length; i++) {
+        values.add(double.parse(numbers[i]));
+      }
+
+      int i = 0;
+
+      while (i < operators.length) {
+        if (operators[i] == '*' || operators[i] == '/') {
+          double value;
+
+          if (operators[i] == '*') {
+            value = values[i] * values[i + 1];
+          } else {
+            value = values[i] / values[i + 1];
+          }
+
+          values[i] = value;
+          values.removeAt(i + 1);
+          operators.removeAt(i);
+        } else {
+          i++;
+        }
+      }
+
+      double result = values[0];
 
       for (int i = 0; i < operators.length; i++) {
-        final number = double.parse(numbers[i + 1]);
-
         if (operators[i] == '+') {
-          result += number;
+          result += values[i + 1];
         } else if (operators[i] == '-') {
-          result -= number;
-        } else if (operators[i] == '*') {
-          result *= number;
-        } else if (operators[i] == '/') {
-          result /= number;
+          result -= values[i + 1];
         }
       }
 
